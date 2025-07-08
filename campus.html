@@ -1,0 +1,297 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Silence</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#3b82f6">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+    .pulse-animation {
+      animation: pulse 2s infinite;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <div class="container mx-auto px-4 py-8 flex-1 flex flex-col justify-center">
+    <!-- Header -->
+    <header class="text-center mb-10">
+      <div class="flex justify-center mb-4">
+        <img src="https://sanjivani.edu.in/images/SU%20LOGO.png" alt="Campus Silence Logo" class="h-20 w-20 rounded-full shadow-lg border-4 border-blue-200 bg-white" />
+      </div>
+      <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Campus Silence</h1>
+      <p class="text-gray-600 mt-2">Auto-silence your phone when you enter campus</p>
+    </header>
+
+    <!-- Status Card -->
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden mb-8">
+      <div class="p-6 flex flex-col items-center">
+        <div class="relative mb-4">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <span class="w-32 h-32 rounded-full bg-blue-100 pulse-animation"></span>
+          </div>
+          <div class="relative flex items-center justify-center">
+            <svg class="w-24 h-24 z-10" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" fill="#e0e7ff" />
+              <path id="status-icon-path" fill="#2563eb" d="M12 17a1.5 1.5 0 0 1-1.5-1.5h3A1.5 1.5 0 0 1 12 17zm4-3V9a4 4 0 1 0-8 0v5a4 4 0 0 0 8 0z" />
+            </svg>
+          </div>
+        </div>
+        <h2 id="status-text" class="text-2xl font-semibold text-gray-800 mb-1">Status Unknown</h2>
+        <p id="status-detail" class="text-gray-500 text-sm">Waiting for location...</p>
+      </div>
+    </div>
+
+    <!-- Settings Card -->
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden mb-8">
+      <div class="p-6">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+          <svg class="w-6 h-6 text-blue-500 inline-block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m0 14v1m8-8h-1M5 12H4m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707"/></svg>
+          Settings
+        </h2>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-base font-medium text-gray-800">Enable Auto-Silent</h3>
+              <p class="text-sm text-gray-500">Silence phone on campus</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="auto-silent-toggle" class="sr-only peer" checked>
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full peer-checked:after:border-white"></div>
+            </label>
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-base font-medium text-gray-800">Unsilent When Leaving</h3>
+              <p class="text-sm text-gray-500">Restore sound off campus</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="unsilent-toggle" class="sr-only peer" checked>
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full peer-checked:after:border-white"></div>
+            </label>
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-base font-medium text-gray-800">Vibrate Mode</h3>
+              <p class="text-sm text-gray-500">Use vibration instead of silent</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="vibrate-toggle" class="sr-only peer">
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full peer-checked:after:border-white"></div>
+            </label>
+          </div>
+        </div>
+        <p class="mt-6 text-blue-700 bg-blue-50 rounded p-3 text-center text-base flex items-center gap-2"><span class="text-xl">🛰</span> This app needs your location permission to detect if you're on campus and silence your phone accordingly.</p>
+      </div>
+    </div>
+
+    <!-- Notification Card -->
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+      <div class="p-6">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+          <svg class="w-6 h-6 text-blue-500 inline-block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C7.67 7.165 6 9.388 6 12v2.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          Notifications
+        </h2>
+        <div class="space-y-3" id="notification-list">
+          <div class="bg-blue-50 border-l-4 border-blue-500 p-4">
+            <p class="text-sm text-blue-700">Welcome to Campus Silence! The app will monitor your location.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PWA Install Button (optional) -->
+  <div id="installContainer" class="fixed bottom-4 right-4 hidden">
+    <button id="installButton" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 transition">
+      Install App
+    </button>
+  </div>
+
+  <script>
+    // --- CONFIG ---
+    const CAMPUS_LAT = 19.90174070285968;
+    const CAMPUS_LNG = 74.49474247801464;
+    const RADIUS_METERS = 150;
+    let isOnCampus = null;
+    let watchId = null;
+    let lastNotification = '';
+
+    // --- DOM ---
+    if (navigator.permissions) {
+  navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
+    if (result.state === 'denied') {
+      alert('Please enable location access for this app in your browser settings.');
+    }
+    if (result.state === 'prompt') {
+      navigator.geolocation.getCurrentPosition(
+        () => startGeoWatch(),
+        (error) => handleError(error),
+        { enableHighAccuracy: true }
+      );
+    } else {
+      startGeoWatch(); // already granted
+    }
+  });
+} else {
+  // fallback for browsers that don’t support navigator.permissions
+  navigator.geolocation.getCurrentPosition(
+    () => startGeoWatch(),
+    (error) => handleError(error),
+    { enableHighAccuracy: true }
+  );
+}
+    const statusText = document.getElementById('status-text');
+    const statusDetail = document.getElementById('status-detail');
+    const statusIconPath = document.getElementById('status-icon-path');
+    const notificationList = document.getElementById('notification-list');
+    const autoSilentToggle = document.getElementById('auto-silent-toggle');
+    const unsilentToggle = document.getElementById('unsilent-toggle');
+    const vibrateToggle = document.getElementById('vibrate-toggle');
+
+    // --- SETTINGS ---
+    function loadSettings() {
+      autoSilentToggle.checked = localStorage.getItem('autoSilent') !== 'false';
+      unsilentToggle.checked = localStorage.getItem('unsilent') !== 'false';
+      vibrateToggle.checked = localStorage.getItem('vibrate') === 'true';
+    }
+    function saveSettings() {
+      localStorage.setItem('autoSilent', autoSilentToggle.checked);
+      localStorage.setItem('unsilent', unsilentToggle.checked);
+      localStorage.setItem('vibrate', vibrateToggle.checked);
+    }
+    autoSilentToggle.addEventListener('change', saveSettings);
+    unsilentToggle.addEventListener('change', saveSettings);
+    vibrateToggle.addEventListener('change', saveSettings);
+    loadSettings();
+
+    // --- GEO UTILS ---
+    function getDistanceFromLatLonInMeters(lat1, lon1, lat2, lon2) {
+      const R = 6371000; // meters
+      const dLat = (lat2-lat1) * Math.PI/180;
+      const dLon = (lon2-lon1) * Math.PI/180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+
+    // --- NOTIFICATIONS ---
+    function showNotification(msg) {
+      if (window.Notification && Notification.permission === 'granted') {
+        if (lastNotification !== msg) {
+          new Notification('Campus Silence', { body: msg, icon: 'https://cdn-icons-png.flaticon.com/512/3064/3064197.png' });
+          lastNotification = msg;
+        }
+      }
+    }
+    function requestNotificationPermission() {
+      if (window.Notification && Notification.permission !== 'granted') {
+        Notification.requestPermission();
+      }
+    }
+    function addNotification(msg, isError = false) {
+      const div = document.createElement('div');
+      div.className = `p-4 border-l-4 ${isError ? 'bg-red-50 border-red-500 text-red-700' : 'bg-blue-50 border-blue-500 text-blue-700'}`;
+      div.innerHTML = `<p class='text-sm'>${msg}</p>`;
+      notificationList.prepend(div);
+    }
+
+    // --- STATUS UI ---
+    function setStatus(onCampus, accuracy) {
+      if (onCampus) {
+        statusText.textContent = 'On Campus';
+        statusDetail.textContent = 'Silent mode activated';
+        statusIconPath.setAttribute('fill', '#22c55e');
+        statusIconPath.setAttribute('d', 'M12 17a1.5 1.5 0 0 1-1.5-1.5h3A1.5 1.5 0 0 1 12 17zm4-3V9a4 4 0 1 0-8 0v5a4 4 0 0 0 8 0z');
+      } else {
+        statusText.textContent = 'Off Campus';
+        statusDetail.textContent = 'Sound mode restored';
+        statusIconPath.setAttribute('fill', '#2563eb');
+        statusIconPath.setAttribute('d', 'M12 17a1.5 1.5 0 0 1-1.5-1.5h3A1.5 1.5 0 0 1 12 17zm4-3V9a4 4 0 1 0-8 0v5a4 4 0 0 0 8 0z');
+      }
+    }
+
+    // --- GEO MONITORING (updated for hardcoded location) ---
+    function handlePosition(position) {
+      const { latitude, longitude, accuracy } = position.coords;
+      const dist = getDistanceFromLatLonInMeters(latitude, longitude, CAMPUS_LAT, CAMPUS_LNG);
+      const within = dist <= RADIUS_METERS;
+      if (isOnCampus === null) {
+        setStatus(within, accuracy);
+        isOnCampus = within;
+        addNotification('Location acquired. Monitoring campus area.');
+      } else if (within && !isOnCampus) {
+        setStatus(true, accuracy);
+        isOnCampus = true;
+        if (vibrateToggle.checked) {
+          addNotification('You’ve entered the campus area. Vibrate mode activated.');
+          showNotification('You’ve entered the campus area. Vibrate mode activated.');
+        }
+      } else if (!within && isOnCampus) {
+        setStatus(false, accuracy);
+        isOnCampus = false;
+        addNotification('You’ve left the campus area. Sound mode restored.');
+        showNotification('You’ve left the campus area. Sound mode restored.');
+      }
+    }
+    function handleError(error) {
+      setStatus(false);
+      addNotification('Location error: ' + error.message, true);
+    }
+    function startGeoWatch() {
+      if (!navigator.geolocation) {
+        addNotification('Geolocation not supported', true);
+        setStatus(false);
+        return;
+      }
+      if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+      watchId = navigator.geolocation.watchPosition(handlePosition, handleError, {
+        enableHighAccuracy: true,
+        maximumAge: 5000,
+        timeout: 10000
+      });
+    }
+
+    // --- INIT ---
+    document.addEventListener('DOMContentLoaded', () => {
+      requestNotificationPermission();
+      startGeoWatch();
+      addNotification('App started. Waiting for location...');
+    });
+
+    // --- PWA INSTALL PROMPT (optional) ---
+    let deferredPrompt;
+    const installContainer = document.getElementById('installContainer');
+    const installButton = document.getElementById('installButton');
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installContainer.classList.remove('hidden');
+    });
+    installButton && installButton.addEventListener('click', () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => {
+          deferredPrompt = null;
+          installContainer.classList.add('hidden');
+        });
+      }
+    });
+    // --- Service Worker (optional, for offline) ---
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
