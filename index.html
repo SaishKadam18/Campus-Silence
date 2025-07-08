@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Silence</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col items-center justify-start p-4">
+
+  <!-- Header -->
+  <div class="text-center mb-6">
+    <img src="https://sanjivani.edu.in/images/SU%20LOGO.png" alt="Logo" class="h-20 w-20 mx-auto rounded-full shadow border-4 border-blue-200" />
+    <h1 class="text-3xl font-bold text-gray-800 mt-3">Campus Silence</h1>
+    <p class="text-gray-500 mt-1">Auto-silence your phone on campus</p>
+  </div>
+
+  <!-- Location Button -->
+  <button id="locationBtn" class="bg-blue-600 text-white px-6 py-3 rounded shadow hover:bg-blue-700 transition">
+    Enable Location Detection
+  </button>
+
+  <!-- Status -->
+  <div class="mt-6 bg-white shadow rounded-lg p-6 w-full max-w-md text-center">
+    <h2 class="text-xl font-semibold text-gray-800 mb-2">📍 Location Status</h2>
+    <p id="status" class="text-gray-600">Location not checked yet.</p>
+  </div>
+
+  <!-- Settings -->
+  <div class="mt-6 bg-white shadow rounded-lg p-6 w-full max-w-md">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">⚙️ Settings</h2>
+
+    <div class="flex justify-between items-center mb-4">
+      <div>
+        <p class="font-medium text-gray-800">Auto Silent</p>
+        <p class="text-sm text-gray-500">Enable silent mode on campus</p>
+      </div>
+      <input type="checkbox" id="autoSilent" class="w-5 h-5" checked />
+    </div>
+
+    <div class="flex justify-between items-center mb-4">
+      <div>
+        <p class="font-medium text-gray-800">Unsilent When Leaving</p>
+        <p class="text-sm text-gray-500">Restore sound off-campus</p>
+      </div>
+      <input type="checkbox" id="unsilent" class="w-5 h-5" checked />
+    </div>
+
+    <div class="flex justify-between items-center">
+      <div>
+        <p class="font-medium text-gray-800">Vibrate Mode</p>
+        <p class="text-sm text-gray-500">Use vibration instead of silent</p>
+      </div>
+      <input type="checkbox" id="vibrate" class="w-5 h-5" />
+    </div>
+  </div>
+
+  <!-- Notification Log -->
+  <div class="mt-6 bg-white shadow rounded-lg p-4 w-full max-w-md">
+    <h2 class="text-lg font-semibold text-gray-800 mb-2">🔔 Notifications</h2>
+    <ul id="notificationList" class="text-sm text-gray-700 space-y-1"></ul>
+  </div>
+
+  <script>
+    const CAMPUS_LAT = 19.901096;
+    const CAMPUS_LNG = 74.494857;
+    const RADIUS = 150; // meters
+
+    const statusText = document.getElementById("status");
+    const locationBtn = document.getElementById("locationBtn");
+    const notifList = document.getElementById("notificationList");
+
+    const autoSilent = document.getElementById("autoSilent");
+    const unsilent = document.getElementById("unsilent");
+    const vibrate = document.getElementById("vibrate");
+
+    function getDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371000;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos(lat1 * Math.PI / 180) *
+        Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) ** 2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    function notify(msg) {
+      const li = document.createElement("li");
+      li.textContent = msg;
+      notifList.prepend(li);
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("Campus Silence", { body: msg });
+      }
+    }
+
+    function checkLocation(position) {
+      const { latitude, longitude } = position.coords;
+      const distance = getDistance(latitude, longitude, CAMPUS_LAT, CAMPUS_LNG);
+      const onCampus = distance <= RADIUS;
+
+      if (onCampus) {
+        statusText.innerHTML = `<span class="text-green-600 font-bold">You are on campus!</span>`;
+        if (autoSilent.checked) {
+          if (vibrate.checked) {
+            notify("🔇 Vibrate mode activated (on campus)");
+          } else {
+            notify("🔕 Silent mode activated (on campus)");
+          }
+        }
+      } else {
+        statusText.innerHTML = `<span class="text-blue-600 font-bold">You are outside campus.</span>`;
+        if (unsilent.checked) {
+          notify("🔔 Sound mode restored (off campus)");
+        }
+      }
+    }
+
+    function requestLocation() {
+      if (!navigator.geolocation) {
+        statusText.textContent = "Geolocation is not supported.";
+        return;
+      }
+
+      navigator.permissions?.query({ name: 'geolocation' }).then((result) => {
+        if (result.state === "denied") {
+          alert("Please allow location access in browser settings.");
+        }
+      });
+
+      navigator.geolocation.getCurrentPosition(
+        checkLocation,
+        (error) => {
+          statusText.textContent = "Error: " + error.message;
+          notify("❌ Location error: " + error.message);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
+      );
+    }
+
+    // Ask for notification permission on load
+    document.addEventListener("DOMContentLoaded", () => {
+      if ("Notification" in window && Notification.permission !== "granted") {
+        Notification.requestPermission();
+      }
+    });
+
+    locationBtn.addEventListener("click", requestLocation);
+  </script>
+</body>
+</html>
