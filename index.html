@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Campus Silence</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen text-center p-4">
+
+  <h1 class="text-3xl font-bold mb-4">Campus Silence</h1>
+
+  <button id="getLocationBtn" class="bg-blue-600 text-white px-6 py-3 rounded shadow hover:bg-blue-700">
+    Enable Location
+  </button>
+
+  <p id="locationOutput" class="mt-4 text-gray-700"></p>
+
+  <script>
+    document.getElementById("getLocationBtn").addEventListener("click", () => {
+      const output = document.getElementById("locationOutput");
+
+      if (!navigator.geolocation) {
+        output.textContent = "Geolocation is not supported by your browser.";
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude.toFixed(6);
+          const lon = position.coords.longitude.toFixed(6);
+          output.innerHTML = `Latitude: ${lat}<br>Longitude: ${lon}`;
+          alert("Location permission granted and location retrieved.");
+        },
+        (error) => {
+          output.textContent = "Error: " + error.message;
+          alert("Location error: " + error.message);
+        }
+      );
+    });
+  </script>
+</body>
+</html>
