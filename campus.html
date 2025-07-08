@@ -125,6 +125,25 @@
     let lastNotification = '';
 
     // --- DOM ---
+    console.log('Script loaded');
+
+if ('geolocation' in navigator) {
+  console.log('Geolocation supported');
+  
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      console.log('Location success', position);
+    },
+    (error) => {
+      console.error('Location error', error.message);
+      alert('Location error: ' + error.message);
+    }
+  );
+} else {
+  console.log('Geolocation not supported');
+  alert('Your browser does not support geolocation.');
+}
+
     if (navigator.permissions) {
   navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
     if (result.state === 'denied') {
