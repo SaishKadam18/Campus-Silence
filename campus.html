@@ -129,6 +129,30 @@
     let lastNotification = '';
 
     // --- DOM ---
+    function requestLocation() {
+  if (!navigator.geolocation) {
+    alert("Geolocation is not supported by your browser");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    function (position) {
+      alert("Location access granted!");
+      console.log("Latitude:", position.coords.latitude);
+      console.log("Longitude:", position.coords.longitude);
+    },
+    function (error) {
+      alert("Location error: " + error.message);
+      console.error(error);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    }
+  );
+}
+
     console.log('Script loaded');
 
 if ('geolocation' in navigator) {
